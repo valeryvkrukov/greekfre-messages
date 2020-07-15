@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Auth::routes();
+
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::get('/messages', 'MessagesController@getMessages');
+Route::post('/messages', 'MessagesController@addMessage');
+Route::delete('/messages/{message}/delete', 'MessagesController@deleteMessage');
