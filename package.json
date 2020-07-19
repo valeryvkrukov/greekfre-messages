@@ -25,6 +25,8 @@
     },
     "dependencies": {
         "laravel-vue-datatable": "^0.5.12",
-        "vue-axios": "^2.1.5"
+        "moment": "^2.27.0",
+        "vue-axios": "^2.1.5",
+        "vuejs-datepicker": "^1.6.2"
     }
 }

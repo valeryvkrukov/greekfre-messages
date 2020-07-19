@@ -19,4 +19,5 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/messages', 'MessagesController@getMessages');
 Route::post('/messages', 'MessagesController@addMessage');
+Route::put('/messages', 'MessagesController@updateMessage');
 Route::delete('/messages/{message}/delete', 'MessagesController@deleteMessage');
