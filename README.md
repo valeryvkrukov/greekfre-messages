@@ -1,34 +1,34 @@
 ## Installation steps
 
-1. Composer installation in console:
+####1. Composer installation in console:
 
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('sha384', 'composer-setup.php') === 'e5325b19b381bfd88ce90a5ddb7823406b2a38cff6bb704b0acc289a09c8128d4a8ce2bbafcd1fcbdc38666422fe2806') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-php composer-setup.php
-php -r "unlink('composer-setup.php');"
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');".
+php -r "if (hash_file('sha384', 'composer-setup.php') === 'e5325b19b381bfd88ce90a5ddb7823406b2a38cff6bb704b0acc289a09c8128d4a8ce2bbafcd1fcbdc38666422fe2806') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;".
+php composer-setup.php.
+php -r "unlink('composer-setup.php');".
 
-2. Laravel with dependencies:
+####2. Laravel with dependencies:
 
-2.1 Setup configuration for constants:
+####2.1 Setup configuration for constants:
 
-// .env
-APP_URL="your hostname"
+// .env.
+APP_URL="your hostname".
 
-DB_CONNECTION=mysql
-DB_HOST="database host name"
-DB_PORT=3306
-DB_DATABASE="database name"
-DB_USERNAME="username"
-DB_PASSWORD="password"
+DB_CONNECTION=mysql.
+DB_HOST="database host name".
+DB_PORT=3306.
+DB_DATABASE="database name".
+DB_USERNAME="username".
+DB_PASSWORD="password".
+.
+TWILIO_SID="INSERT YOUR TWILIO SID HERE".
+TWILIO_AUTH_TOKEN="INSERT YOUR TWILIO TOKEN HERE".
+TWILIO_NUMBER="INSERT YOUR TWILIO NUMBER IN [E.164] FORMAT".
 
-TWILIO_SID="INSERT YOUR TWILIO SID HERE"
-TWILIO_AUTH_TOKEN="INSERT YOUR TWILIO TOKEN HERE"
-TWILIO_NUMBER="INSERT YOUR TWILIO NUMBER IN [E.164] FORMAT"
-
-2.2 Setup web server (means using php7.4-fpm version):
+####2.2 Setup web server (means using php7.4-fpm version):
 
 // NGINX -- /etc/nginx/sites-enabled/your-site.conf
-server {
+`server {
         listen 80;
         listen [::]:80;
 
@@ -65,4 +65,4 @@ server {
 
         error_log /var/log/nginx/greekfre-messages_error.log;
         access_log /var/log/nginx/greekfre-messages_access.log;
-}
+}`
