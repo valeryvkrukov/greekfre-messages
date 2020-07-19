@@ -14,20 +14,18 @@ php -r "unlink('composer-setup.php');"
 #### 2.1 Setup configuration for constants:
 
 // .env.
-`
-APP_URL="your hostname"
+- APP_URL="your hostname"
 
-DB_CONNECTION=mysql
-DB_HOST="database host name"
-DB_PORT=3306
-DB_DATABASE="database name"
-DB_USERNAME="username"
-DB_PASSWORD="password"
+- DB_CONNECTION=mysql
+- DB_HOST="database host name"
+- DB_PORT=3306
+- DB_DATABASE="database name"
+- DB_USERNAME="username"
+- DB_PASSWORD="password"
 
-TWILIO_SID="INSERT YOUR TWILIO SID HERE"
-TWILIO_AUTH_TOKEN="INSERT YOUR TWILIO TOKEN HERE"
-TWILIO_NUMBER="INSERT YOUR TWILIO NUMBER IN [E.164] FORMAT"
-`
+- TWILIO_SID="INSERT YOUR TWILIO SID HERE"
+- TWILIO_AUTH_TOKEN="INSERT YOUR TWILIO TOKEN HERE"
+- TWILIO_NUMBER="INSERT YOUR TWILIO NUMBER IN [E.164] FORMAT"
 
 #### 2.2 Setup web server (means using php7.4-fpm version):
 
