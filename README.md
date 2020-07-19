@@ -78,8 +78,7 @@ composer install
 #### 2.4 Installation of Vue and other JS dependencies
 
 `
-npm install
-npm run dev
+npm install && npm run dev
 `
 
 #### 2.5 Database migration
@@ -87,9 +86,8 @@ npm run dev
 `
 php artisan migrate:fresh
 `
----
 
-If you need sample data just use previous command with parameter '--seed':
+##### If you need sample data just use previous command with parameter '--seed':
 
 `
 php artisan migrate:fresh --seed
