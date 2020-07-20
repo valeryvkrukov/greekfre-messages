@@ -32,7 +32,7 @@ php -r "unlink('composer-setup.php');"
 // NGINX -- /etc/nginx/sites-enabled/your-site.conf
 
 ` 
-server {
+    server {
         listen 80;
         listen [::]:80;
 
@@ -69,7 +69,7 @@ server {
 
         error_log /var/log/nginx/greekfre-messages_error.log;
         access_log /var/log/nginx/greekfre-messages_access.log;
-}
+    }
 `
 
 #### 2.3 Installation of composer dependencies
