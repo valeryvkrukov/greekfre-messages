@@ -31,7 +31,6 @@ php -r "unlink('composer-setup.php');"
 
 // NGINX -- /etc/nginx/sites-enabled/your-site.conf
 
-` 
     server {
         listen 80;
         listen [::]:80;
@@ -49,7 +48,7 @@ php -r "unlink('composer-setup.php');"
         charset utf-8;
 
         location / {
-                try_files $uri $uri/ /index.php?$query_string;
+            try_files $uri $uri/ /index.php?$query_string;
         }
 
         location = /favicon.ico { access_log off; log_not_found off; }
@@ -58,19 +57,19 @@ php -r "unlink('composer-setup.php');"
         error_page 404 /index.php;
 
         location ~ \.php$ {
-                fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
-                fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-                include fastcgi_params;
+            fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+            include fastcgi_params;
         }
 
         location ~ /\.(?!well-known).* {
-                deny all;
+            deny all;
         }
 
         error_log /var/log/nginx/greekfre-messages_error.log;
         access_log /var/log/nginx/greekfre-messages_access.log;
     }
-`
+
 
 #### 2.3 Installation of composer dependencies
 
