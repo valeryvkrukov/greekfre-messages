@@ -32,8 +32,8 @@ php -r "unlink('composer-setup.php');"
 // NGINX -- /etc/nginx/sites-enabled/your-site.conf
 
 `
-server { 
-        listen 80; 
+server {
+        listen 80;
         listen [::]:80;
 
         root /var/www/root-directory-of-your-site/public;
