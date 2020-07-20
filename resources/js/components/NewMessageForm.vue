@@ -53,7 +53,8 @@ export default {
         addRecord(e) {
             e.preventDefault();
             let currentObj = this;
-            this.axios.post('/messages', {
+            let currentUrl = location.protocol + '//' + location.host + location.pathname;
+            this.axios.post(currentUrl + '/messages', {
                 name: this.name,
                 order: this.order,
                 phone: this.phone,

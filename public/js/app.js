@@ -2004,7 +2004,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     updateRecord: function updateRecord(data) {
       var currentObj = this;
-      this.axios.put('/messages', data).then(function (response) {
+      this.axios.put('messages', data).then(function (response) {
         currentObj.$refs.messagesTable.getData();
       })["catch"](function (error) {
         console.log(error);
@@ -2012,7 +2012,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     deleteRecord: function deleteRecord(id) {
       var currentObj = this;
-      this.axios["delete"]('/messages/' + id + '/delete').then(function (response) {
+      this.axios["delete"]('messages/' + id + '/delete').then(function (response) {
         currentObj.$refs.messagesTable.getData();
       })["catch"](function (error) {
         console.log(error);
@@ -2115,7 +2115,7 @@ __webpack_require__.r(__webpack_exports__);
     addRecord: function addRecord(e) {
       e.preventDefault();
       var currentObj = this;
-      this.axios.post('/messages', {
+      this.axios.post('messages', {
         name: this.name,
         order: this.order,
         phone: this.phone,
