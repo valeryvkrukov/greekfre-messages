@@ -33,6 +33,7 @@ php -r "unlink('composer-setup.php');"
 
 `
 server {
+
 	listen 80;
 	listen [::]:80;
 
