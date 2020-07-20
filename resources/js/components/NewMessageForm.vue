@@ -53,15 +53,14 @@ export default {
         addRecord(e) {
             e.preventDefault();
             let currentObj = this;
-            let currentUrl = location.protocol + '//' + location.host + location.pathname;
-            this.axios.post(currentUrl + '/messages', {
+            const newMessageUrl = location.protocol + '//' + location.host + location.pathname + 'messages';
+            this.axios.post(newMessageUrl, {
                 name: this.name,
                 order: this.order,
                 phone: this.phone,
                 message: this.message,
             }).then(function (response) {
                 currentObj.output = response.data;
-                //this.$parent.$children[1].getData();
             }).catch(function (error) {
                 currentObj.output = error;
             });

@@ -6,7 +6,7 @@
                 ref="messagesTable"
                 :columns="columns"
                 order-dir="desc"
-                url="/messages"
+                :url="currentUrl + 'messages'"
             ></data-table>
         </div>
     </div>
@@ -94,7 +94,7 @@ export default {
     methods: {
         updateRecord(data) {
             let currentObj = this;
-            this.axios.put(this.currentUrl + '/messages', data).then(function (response) {
+            this.axios.put(this.currentUrl + 'messages', data).then(function (response) {
                 currentObj.$refs.messagesTable.getData();
             }).catch(function (error) {
                 console.log(error)
@@ -102,7 +102,7 @@ export default {
         },
         deleteRecord(id) {
             let currentObj = this;
-            this.axios.delete(this.currentUrl + '/messages/' + id + '/delete').then(function (response) {
+            this.axios.delete(this.currentUrl + 'messages/' + id + '/delete').then(function (response) {
                 currentObj.$refs.messagesTable.getData();
             }).catch(function (error) {
                 console.log(error)
