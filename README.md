@@ -30,7 +30,8 @@ php -r "unlink('composer-setup.php');"
 #### 2.2 Setup web server (means using php7.4-fpm version):
 
 // NGINX -- /etc/nginx/sites-enabled/your-site.conf
-`server {
+`
+server {
         listen 80;
         listen [::]:80;
 
