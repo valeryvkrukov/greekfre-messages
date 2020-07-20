@@ -33,8 +33,8 @@ php -r "unlink('composer-setup.php');"
 
 `
 server {
-        listen 80;
-        listen [::]:80;
+        listen 80; 
+        listen [::]:80; 
 
         root /var/www/root-directory-of-your-site/public;
 
