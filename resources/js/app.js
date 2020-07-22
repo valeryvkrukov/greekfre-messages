@@ -9,11 +9,13 @@ window.Vue = require('vue');
 Vue.use(DataTable);
 Vue.use(VueAxios, axios);
 
+Vue.component('error-modal', require('./components/ErrorModal.vue').default);
 Vue.component('new-message-form', require('./components/NewMessageForm.vue').default);
 Vue.component('editable-cell-column', require('./components/TextEditableColumn.vue').default);
 Vue.component('picked-up-column', require('./components/PickedUpColumn.vue').default);
 Vue.component('delete-row-column', require('./components/DeleteRowColumn.vue').default);
 Vue.component('all-messages', require('./components/AllMessages.vue').default);
+Vue.component('profile-form', require('./components/ProfileForm.vue').default);
 
 const app = new Vue({
     el: '#app'

@@ -87,6 +87,7 @@ export default {
         }
     },
     created () {
+        this.$root.$on('newrecord', (e) => this.updateTable(e));
         this.$root.$on('pickedup', (data) => this.updateRecord(data));
         this.$root.$on('deleterow', (id) => this.deleteRecord(id));
         this.$root.$on('cellupdated', (data) => this.updateRecord(data))
@@ -95,7 +96,7 @@ export default {
         updateRecord(data) {
             let currentObj = this;
             this.axios.put(this.currentUrl + 'messages', data).then(function (response) {
-                currentObj.$refs.messagesTable.getData();
+                currentObj.updateTable();
             }).catch(function (error) {
                 console.log(error)
             });
@@ -103,10 +104,13 @@ export default {
         deleteRecord(id) {
             let currentObj = this;
             this.axios.delete(this.currentUrl + 'messages/' + id + '/delete').then(function (response) {
-                currentObj.$refs.messagesTable.getData();
+                currentObj.updateTable();
             }).catch(function (error) {
                 console.log(error)
             });
+        },
+        updateTable(e) {
+            this.$refs.messagesTable.getData();
         }
     }
 }

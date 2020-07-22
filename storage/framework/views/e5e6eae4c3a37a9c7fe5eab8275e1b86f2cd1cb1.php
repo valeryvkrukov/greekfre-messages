@@ -56,6 +56,17 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <?php if(Route::is('profile')): ?>
+                                        <a class="dropdown-item" href="<?php echo e(route('home')); ?>">
+                                            <?php echo e(__('Dashboard')); ?>
+
+                                        </a>
+                                    <?php else: ?>
+                                        <a class="dropdown-item" href="<?php echo e(route('profile')); ?>">
+                                            <?php echo e(__('Profile')); ?>
+
+                                        </a>
+                                    <?php endif; ?>
                                     <a class="dropdown-item" href="<?php echo e(route('logout')); ?>"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

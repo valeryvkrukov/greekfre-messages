@@ -55,6 +55,15 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    @if (Route::is('profile'))
+                                        <a class="dropdown-item" href="{{ route('home') }}">
+                                            {{ __('Dashboard') }}
+                                        </a>
+                                    @else
+                                        <a class="dropdown-item" href="{{ route('profile') }}">
+                                            {{ __('Profile') }}
+                                        </a>
+                                    @endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

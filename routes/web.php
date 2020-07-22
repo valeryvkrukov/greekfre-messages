@@ -15,9 +15,16 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
+
+
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/messages', 'MessagesController@getMessages');
 Route::post('/messages', 'MessagesController@addMessage');
 Route::put('/messages', 'MessagesController@updateMessage');
 Route::delete('/messages/{message}/delete', 'MessagesController@deleteMessage');
+
+Route::get('/profile', 'ProfileController@index')->name('profile');
+
+Route::get('/profile/load', 'ProfileController@getProfile');
+Route::post('/profile', 'ProfileController@updateProfile');

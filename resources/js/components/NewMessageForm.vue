@@ -8,13 +8,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">Order No. (last 4 digits):</label>
+                <label class="col-sm-2 control-label">Order # (last 4 digits):</label>
                 <div class="col-sm-5">
                     <input type="number" v-model="order" class="form-control">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">Mobile No:</label>
+                <label class="col-sm-2 control-label">Mobile #:</label>
                 <div class="col-sm-5">
                     <input type="tel" v-model="phone" class="form-control" placeholder="Mobile_No">
                 </div>
@@ -61,6 +61,7 @@ export default {
                 message: this.message,
             }).then(function (response) {
                 currentObj.output = response.data;
+                currentObj.$root.$emit('newrecord', response.data);
             }).catch(function (error) {
                 currentObj.output = error;
             });

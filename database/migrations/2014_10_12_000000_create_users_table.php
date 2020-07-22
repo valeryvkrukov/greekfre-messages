@@ -20,6 +20,9 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('twilio_phone')->nullable()->unique();
+            $table->string('twilio_sid')->nullable()->unique();
+            $table->string('twilio_token')->nullable()->unique();
             $table->timestamps();
         });
     }

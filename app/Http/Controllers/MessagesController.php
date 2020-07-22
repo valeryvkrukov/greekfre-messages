@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Twilio\Rest\Client;
 use App\Messages;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
@@ -55,19 +56,29 @@ class MessagesController extends Controller
             ]);
             $message->owner()->associate($user);
             $message->save();
+
+            if ($user->twilio_phone) {
+                $client = new Client($user->twilio_sid, $user->twilio_token);
+                $client->messages->create($message->phone, [
+                    'from' => $user->twilio_phone,
+                    'body' => $message->message,
+                ]);
+            }
             
-            $accountSid = getenv("TWILIO_SID");
+            /*$accountSid = getenv("TWILIO_SID");
             $authToken = getenv("TWILIO_AUTH_TOKEN");
             $twilioNumber = getenv("TWILIO_NUMBER");
             $client = new Client($account_sid, $auth_token);
             $client->messages->create($message->phone, [
                 'from' => $twilioNumber,
                 'body' => $message->message,
-            ]);
+            ]);*/
 
             return $message->toJson(JSON_PRETTY_PRINT);
         } catch (\Exception $e) {
-
+            return json_encode([
+                'error' => $e->getMessages(),
+            ]);
         }
     }
     
@@ -98,7 +109,7 @@ class MessagesController extends Controller
         if ($message->owner->id == $user->id) {
             $message->delete();
         }
-        return 'message deleted';
+        return ['success' => 'message deleted'];
     }
 
 }
