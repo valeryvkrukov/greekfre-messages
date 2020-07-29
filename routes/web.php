@@ -24,6 +24,9 @@ Route::post('/messages', 'MessagesController@addMessage');
 Route::put('/messages', 'MessagesController@updateMessage');
 Route::delete('/messages/{message}/delete', 'MessagesController@deleteMessage');
 
+Route::get('/messages/status', 'MessagesController@deliveryTrack');
+//Route::post('/messages/twilio-callback', 'MessagesController@twilioCallback');
+
 Route::get('/profile', 'ProfileController@index')->name('profile');
 
 Route::get('/profile/load', 'ProfileController@getProfile');

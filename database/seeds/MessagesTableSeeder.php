@@ -14,7 +14,7 @@ class MessagesTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Factory::create();
+        /*$faker = Factory::create();
         Messages::truncate();
 
         foreach(range(1, 100) as $i) {
@@ -27,9 +27,9 @@ class MessagesTableSeeder extends Seeder
                 'message' => sprintf("Hi, %s Your order is now ready for pickup!\nThanks, The Greek Freak.\nNote: For customer service please call 289 660 4660", $name),
                 'picked_up' => $faker->boolean,
             ]);
-            
+
             $message->owner()->associate($owner);
             $message->save();
-        }
+        }*/
     }
 }

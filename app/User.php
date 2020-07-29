@@ -16,7 +16,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
+        'default_message',
+        'twilio_phone',
+        'twilio_sid',
+        'twilio_token',
     ];
 
     /**
@@ -37,8 +43,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function messages() 
-   {
-      return $this->hasMany('App\Messages');
-   }
+    public function messages()
+    {
+        return $this->hasMany('App\Messages');
+    }
 }

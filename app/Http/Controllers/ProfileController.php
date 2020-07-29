@@ -18,7 +18,8 @@ class ProfileController extends Controller
         'twilio' => [
             'twilio_phone' => 'nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'twilio_sid' => 'nullable|string|alpha_num',
-            'twilio_token' => 'nullable|string|alpha_num'
+            'twilio_token' => 'nullable|string|alpha_num',
+            'default_message' => 'nullable|string',
         ],
     ];
     /**
@@ -62,7 +63,7 @@ class ProfileController extends Controller
         $data = $request->input('data');
 
         if (!is_null($section) && in_array($section, ['account', 'twilio'])) {
-            
+
             $validator = Validator::make($data, $this->validationRules[$section]);
 
             if ($validator->fails()) {
@@ -72,12 +73,11 @@ class ProfileController extends Controller
                 return $response;
             } else {
                 foreach ($data as $key => $value) {
-                    $_key = $section === 'twilio' ? sprintf('twilio_%s', $key) : $key;
-                    if (!is_null($value) && in_array($_key, $columns)) {
-                        if ($_key === 'password') {
+                    if (!is_null($value) && in_array($key, $columns)) {
+                        if ($key === 'password') {
                             $value = Hash::make($value);
                         }
-                        $account->$_key = $value;
+                        $account->$key = $value;
                     }
                 }
                 $account->save();
@@ -100,9 +100,10 @@ class ProfileController extends Controller
                 'email' => $user->email,
             ],
             'twilio' => [
-                'phone' => $user->twilio_phone,
-                'sid' => $user->twilio_sid,
-                'token' => $user->twilio_token,
+                'twilio_phone' => $user->twilio_phone,
+                'twilio_sid' => $user->twilio_sid,
+                'twilio_token' => $user->twilio_token,
+                'default_message' => $user->default_message,
             ],
         ];
     }

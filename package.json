@@ -24,8 +24,10 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "laravel-echo": "^1.8.0",
         "laravel-vue-datatable": "^0.5.12",
         "moment": "^2.27.0",
+        "pusher-js": "^6.0.3",
         "vue-axios": "^2.1.5",
         "vuejs-datepicker": "^1.6.2"
     }

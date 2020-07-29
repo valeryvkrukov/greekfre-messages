@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Messages extends Model
 {
     protected $fillable = [
-        'name', 'order', 'phone', 'message', 'picked_up',
+        'name',
+        'order',
+        'phone',
+        'message',
+        'picked_up',
+        'created_at'
     ];
 
     protected $attributes = [
@@ -18,6 +23,11 @@ class Messages extends Model
     public function owner()
     {
         return $this->belongsTo('App\User')->withDefault();
+    }
+
+    public function status()
+    {
+        return $this->hasOne('App\Delivery');
     }
 
 }

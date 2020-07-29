@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DeliveryStatusUpdated;
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
 use App\Messages;
+use App\Delivery;
 use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 class MessagesController extends Controller
@@ -16,15 +18,19 @@ class MessagesController extends Controller
     public function getMessages(Request $request)
     {
         $user = auth()->user();
-        $columns = ['name', 'order', 'phone', 'message', 'created_at', 'picked_up'];
         $length = $request->input('length');
         $column = $request->input('column');
         $orderByDir = $request->input('dir', 'desc');
         $search_input = $request->input('search');
 
-        $query = Messages::select('id', 'name', 'order', 'phone', 'message', 'created_at', 'picked_up')
-            ->orderBy($column, $orderByDir)
-            ->where('owner_id', '=', $user->id);
+        if ($column === 'status.status') {
+            $column = 'deliveries.status';
+        }
+
+        $query = Messages::select('*')
+            ->with('status')
+            ->where('owner_id', '=', $user->id)
+            ->orderBy($column, $orderByDir);
 
         if ($search_input) {
             $query->where(function($query) use ($search_input) {
@@ -59,29 +65,30 @@ class MessagesController extends Controller
 
             if ($user->twilio_phone) {
                 $client = new Client($user->twilio_sid, $user->twilio_token);
-                $client->messages->create($message->phone, [
+                $sentMessage = $client->messages->create($message->phone, [
                     'from' => $user->twilio_phone,
                     'body' => $message->message,
+                    'statusCallback' => 'https://postb.in/1595542075488-1130008767358',
                 ]);
+                $delivery = new Delivery([
+                    'sender_id' => $user->id,
+                    'account_sid' => $user->twilio_sid,
+                    'message_sid' => $sentMessage->sid,
+                    'status' => $sentMessage->status,
+                ]);
+                $delivery->save();
+                $message->status()->save($delivery);
             }
-            
-            /*$accountSid = getenv("TWILIO_SID");
-            $authToken = getenv("TWILIO_AUTH_TOKEN");
-            $twilioNumber = getenv("TWILIO_NUMBER");
-            $client = new Client($account_sid, $auth_token);
-            $client->messages->create($message->phone, [
-                'from' => $twilioNumber,
-                'body' => $message->message,
-            ]);*/
+            $message->refresh();
 
-            return $message->toJson(JSON_PRETTY_PRINT);
+            return Messages::where('id', '=', $message->id)->with('status')->first()->toJson();
         } catch (\Exception $e) {
             return json_encode([
-                'error' => $e->getMessages(),
+                'error' => $e->getMessage(),
             ]);
         }
     }
-    
+
     /**
      * @param \Illuminate\Http\Request
      * @return array
@@ -110,6 +117,22 @@ class MessagesController extends Controller
             $message->delete();
         }
         return ['success' => 'message deleted'];
+    }
+
+    /**
+     * @param Request
+     * @return array
+     */
+    public function deliveryTrack(Request $request)
+    {
+        $user = auth()->user();
+
+        $sent = Delivery::where('message_sid', '=', $_GET['id'])->first();
+        $sent->status = 'sent';
+        $sent->save();
+
+        event(new DeliveryStatusUpdated($sent));
+        return $sent->toJson();
     }
 
 }

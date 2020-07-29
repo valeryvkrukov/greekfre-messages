@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateMessages extends Migration
@@ -20,8 +21,15 @@ class CreateMessages extends Migration
             $table->string('phone');
             $table->text('message');
             $table->boolean('picked_up');
-            $table->timestamps();
-            $table->integer('owner_id')->nullable()->unsigned()->index('owner_id');
+            $table->dateTimeTz('created_at')
+                ->nullable()
+                ->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTimeTz('updated_at')
+                ->nullable();
+            $table->integer('owner_id')
+                ->nullable()
+                ->unsigned()
+                ->index('owner_id');
         });
     }
 
