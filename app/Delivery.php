@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\DeliveryStatusUpdated;
 use Illuminate\Database\Eloquent\Model;
 
 class Delivery extends Model
@@ -12,6 +13,10 @@ class Delivery extends Model
         'message_sid',
         'account_sid',
         'status',
+    ];
+
+    protected $dispatchesEvents = [
+        'updated' => DeliveryStatusUpdated::class,
     ];
 
     public function message()

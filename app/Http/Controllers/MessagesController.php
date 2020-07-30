@@ -27,8 +27,7 @@ class MessagesController extends Controller
             $column = 'deliveries.status';
         }
 
-        $query = Messages::select('*')
-            ->with('status')
+        $query = Messages::with('status')
             ->where('owner_id', '=', $user->id)
             ->orderBy($column, $orderByDir);
 
@@ -68,24 +67,24 @@ class MessagesController extends Controller
                 $sentMessage = $client->messages->create($message->phone, [
                     'from' => $user->twilio_phone,
                     'body' => $message->message,
-                    'statusCallback' => 'https://postb.in/1595542075488-1130008767358',
+                    'statusCallback' => 'https://postb.in/1596104578992-0892813524696',
                 ]);
-                $delivery = new Delivery([
-                    'sender_id' => $user->id,
-                    'account_sid' => $user->twilio_sid,
-                    'message_sid' => $sentMessage->sid,
-                    'status' => $sentMessage->status,
-                ]);
-                $delivery->save();
-                $message->status()->save($delivery);
+                if ($sentMessage->sid) {
+                    $delivery = new Delivery([
+                        'sender_id' => $user->id,
+                        'account_sid' => $user->twilio_sid,
+                        'message_sid' => $sentMessage->sid,
+                        'status' => $sentMessage->status,
+                    ]);
+                    $delivery->save();
+                    $message->status()->save($delivery);
+                }
             }
             $message->refresh();
 
             return Messages::where('id', '=', $message->id)->with('status')->first()->toJson();
         } catch (\Exception $e) {
-            return json_encode([
-                'error' => $e->getMessage(),
-            ]);
+            return json_encode([$e->__toString()]);
         }
     }
 

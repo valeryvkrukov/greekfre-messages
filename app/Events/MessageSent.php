@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Messages;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,27 +11,32 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class DeliveryStatusUpdated implements ShouldBroadcast
+class MessageSent
 {
-    /**
-     * Information about the SMS delivery status update.
-     *
-     * @var string
-     */
-    public $update;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct($update)
+    /**
+     * @var Messages
+     */
+    private $message;
+
+    /**
+     * Create a new event instance.
+     *
+     * @param Messages $message
+     */
+    public function __construct(Messages $message)
     {
-        $this->update = $update;
+        $this->message = $message;
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return Channel|Channel[]|void
+     * @return \Illuminate\Broadcasting\Channel|array
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('sms_delivery.status_update');
+        return new PrivateChannel('message.sent');
     }
 }
