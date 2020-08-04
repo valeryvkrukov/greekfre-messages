@@ -68,7 +68,7 @@ class MessagesController extends Controller
                 $sentMessage = $client->messages->create($message->phone, [
                     'from' => $user->twilio_phone,
                     'body' => $message->message,
-                    'statusCallback' => 'https://www.greekfreak.ca/messages-latest/public/delivery/status',
+                    'statusCallback' => config('app.twilio_callback_url'),
                 ]);
                 if ($sentMessage->sid) {
                     $delivery = new Delivery([

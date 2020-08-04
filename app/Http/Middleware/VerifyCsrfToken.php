@@ -12,6 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        'https://www.greekfreak.ca/messages-latest/public/delivery/status',
+        'delivery/*',
     ];
+
+    
 }

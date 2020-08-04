@@ -56,6 +56,8 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    'twilio_callback_url' => env('TWILIO_STATUS_CALLBACK_URL', null),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
