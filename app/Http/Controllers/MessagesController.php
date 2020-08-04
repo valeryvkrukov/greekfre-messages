@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\DeliveryStatusUpdated;
+use App\Events\NewMessageNotification;
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
 use App\Messages;
@@ -67,7 +68,7 @@ class MessagesController extends Controller
                 $sentMessage = $client->messages->create($message->phone, [
                     'from' => $user->twilio_phone,
                     'body' => $message->message,
-                    'statusCallback' => 'https://postb.in/1596104578992-0892813524696',
+                    'statusCallback' => 'https://www.greekfreak.ca/messages-latest/public/delivery/status',
                 ]);
                 if ($sentMessage->sid) {
                     $delivery = new Delivery([
@@ -78,6 +79,7 @@ class MessagesController extends Controller
                     ]);
                     $delivery->save();
                     $message->status()->save($delivery);
+		    event(new NewMessageNotification($message));
                 }
             }
             $message->refresh();

@@ -12,6 +12,8 @@ use Illuminate\Queue\SerializesModels;
 
 class DeliveryStatusUpdated implements ShouldBroadcast
 {
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
     /**
      * Information about the SMS delivery status update.
      *
@@ -31,6 +33,6 @@ class DeliveryStatusUpdated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('sms_delivery.status_update');
+        return new PrivateChannel('sms_delivery');
     }
 }

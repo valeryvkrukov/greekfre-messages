@@ -99,28 +99,10 @@ export default {
         this.$root.$on('pickedup', (data) => this.updateRecord(data));
         this.$root.$on('deleterow', (id) => this.deleteRecord(id));
         this.$root.$on('cellupdated', (data) => this.updateRecord(data));
-        Echo.private('message.sent')
-            .listen('MessageSent', (e) => {
-                alert(e.post.title + 'Message sent');
-                console.log(e.post.title);
-                console.log('Loaded');
-            });
-    },
-    mounted () {
-        /*Echo.private('sms_delivery.status_update')
-            .listen('DeliveryStatusUpdated', (e) => {
-                console.log('ECHO', e)
-                this.updateTable();
-            });*/
+        this.$root.$on('refresh-statuses', (e) => this.updateTable(e));
     },
     methods: {
         recordAdded(data) {
-            console.log(data)
-            Echo.private('sms_delivery.status_update')
-                .listen('DeliveryStatusUpdated', (e) => {
-                    console.log('ECHO', e)
-                    this.updateTable();
-                });
             this.updateTable();
         },
         updateRecord(data) {

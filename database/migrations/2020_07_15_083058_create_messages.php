@@ -16,10 +16,10 @@ class CreateMessages extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 128);
             $table->integer('order');
-            $table->string('phone');
-            $table->text('message');
+            $table->string('phone', 128);
+            $table->mediumText('message');
             $table->boolean('picked_up');
             $table->dateTimeTz('created_at')
                 ->nullable()

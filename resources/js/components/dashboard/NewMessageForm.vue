@@ -4,30 +4,47 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">Name:</label>
                 <div class="col-sm-5">
-                    <input type="name" v-model="name" @focusin="changeMessage = false" @blur="changeMessage = true" class="form-control" placeholder="Some Name">
+                    <input type="name" v-model="name" class="form-control" placeholder="Some Name">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Order # (last 4 digits):</label>
                 <div class="col-sm-5">
-                    <input type="number" v-model="order" @focusin="changeMessage = false" @blur="changeMessage = true" class="form-control" placeholder="1234">
+                    <input type="number" v-model="order" class="form-control" placeholder="1234">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Mobile #:</label>
                 <div class="col-sm-5">
-                    <input type="tel" v-model="phone" @focusin="changeMessage = false" @blur="changeMessage = true" class="form-control" placeholder="+12345678910">
+                    <input type="tel" v-model="phone" class="form-control" placeholder="+12345678910">
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="templates.length > 0">
                 <label class="col-sm-2 control-label">Message:</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control" rows="3" @focus="changeMessage = true" v-model="message"></textarea>
+                <div class="col-sm-5">
+                    <select class="form-control" @change="messageTemplateChanged($event)">
+                        <option
+                            v-for="(template, key) in templates"
+                            :key="key"
+                            :value="key"
+                        >Template #{{ key + 1 }}</option>
+                    </select>
+                    <div
+                        v-if="templates[currentTemplate]"
+                        class="container p-2 mt-2 bg-white h-auto d-inline-block border"
+                    >{{ message }}</div>
                 </div>
             </div>
-            <div class="form-group">
+            <div v-else class="form-group col-sm-5">
+                <h4 class="text-danger bg-white p-3 border">
+                    <p>Need at least one message template.</p>
+                    <small class="text-muted">Can be added in Profile &gt; Twilio Settings</small>
+                </h4>
+            </div>
+            <div v-if="templates.length > 0" class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <input type="submit" name="submit" class="btn btn-primary" value="Send">
+                    <input @click="refreshStatuses" type="button" name="refresh" class="btn btn-secondary" value="Refresh Statuses">
                 </div>
             </div>
         </form>
@@ -43,24 +60,16 @@ export default {
             name: '',
             order: '',
             phone: '',
-            //message: '',
-            cachedMessage: '',
             defaultMessage: '',
-            changeMessage: true
+            templates: [],
+            currentTemplate: 0,
         }
     },
     created () {
         let currentObj = this;
         this.axios.get(this.currentUrl + 'profile/load').then((response) => {
-            currentObj.message = response.data.twilio.default_message;
-            currentObj.cachedMessage = response.data.twilio.default_message;
-            currentObj.defaultMessage = response.data.twilio.default_message;
-        }).then(() => {
-            if (currentObj.defaultMessage === '') {
-                currentObj.message = '';
-                currentObj.cachedMessage = '';
-                currentObj.defaultMessage = response.data.default_message;
-            }
+            currentObj.defaultMessage = response.data.twilio.templates.length ? response.data.twilio.templates[0].content : '';
+            currentObj.templates = response.data.twilio.templates;
         });
     },
     computed: {
@@ -75,26 +84,7 @@ export default {
                 return message;
             },
             set: function(message) {
-                // TODO
-                /*if (this.cachedMessage.length > 0) {
-                    let direction = this.defaultMessage.length > this.cachedMessage.length;
-                    let length = direction ? this.defaultMessage.length : this.cachedMessage.length;
-                    for (let i = 0; i < length; i++) {
-                        if (this.defaultMessage[i] !== this.cachedMessage[i]) {
-                            if (direction) {
-                                let first = this.defaultMessage.slice(0, i);
-                                let last = this.defaultMessage.slice(i);
-                                this.defaultMessage = first + message[i] + last;
-                            } else {
-                                let first = this.defaultMessage.slice(0, i);
-                                let last = this.defaultMessage.slice(i + 1, this.defaultMessage.length);
-                                this.defaultMessage = first + last;
-                            }
-                            break;
-                        }
-                    }
-                }*/
-                this.cachedMessage = this.defaultMessage;
+                // ?TODO
             }
         }
     },
@@ -109,11 +99,17 @@ export default {
                 message: this.message,
             }).then((response) => {
                 currentObj.output = response.data;
-                currentObj.message = currentObj.defaultMessage;
                 currentObj.$root.$emit('newrecord', response.data);
             }).catch((error) => {
                 currentObj.output = error;
             });
+        },
+        messageTemplateChanged(event) {
+            this.currentTemplate = event.target.value;
+            this.defaultMessage = this.templates[event.target.value].content;
+        },
+        refreshStatuses(e) {
+            this.$root.$emit('refresh-statuses', e);
         }
     }
 }

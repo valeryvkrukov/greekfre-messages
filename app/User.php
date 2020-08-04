@@ -19,7 +19,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'default_message',
+        'templates',
         'twilio_phone',
         'twilio_sid',
         'twilio_token',
@@ -46,5 +46,10 @@ class User extends Authenticatable
     public function messages()
     {
         return $this->hasMany('App\Messages');
+    }
+
+    public function templates()
+    {
+        return $this->hasMany('App\Template');
     }
 }

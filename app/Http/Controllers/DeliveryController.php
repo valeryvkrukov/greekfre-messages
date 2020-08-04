@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Delivery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Events\DeliveryStatusUpdated;
 
 class DeliveryController extends Controller
 {
@@ -18,9 +20,16 @@ class DeliveryController extends Controller
      */
     public function callback(Request $request)
     {
-        $sid = $request->input('MessageSid');
-        $status = $request->input('MessageStatus');
+	Log::info(sprintf('LOG: %s', $request->input('SmsStatus')));
+        $sid = $request->input('SmsSid');
+        $status = $request->input('SmsStatus');
 
-        $status = Delivery::firstWhere('');
+        $deliveryStatus = Delivery::where('message_sid', '=', $sid)->first();
+	$deliveryStatus->status = $status;
+	$deliveryStatus->save();
+
+	DeliveryStatusUpdated::dispatch($deliveryStatus);
+
+	return ['status' => $status];
     }
 }

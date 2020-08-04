@@ -14,24 +14,14 @@ use App\Delivery;
 |
 */
 
-Broadcast::channel('message.sent', function ($message) {
-
-    info("Load from chanell");
-
-    return (int) auth()->user()->id != (int) $message->owner_id;
-
+Broadcast::channel('App.User.*', function($user, $id) {
+    return (int) $user->id === (int) $id;
 });
 
-/*Broadcast::channel('user.{userId}', function ($user, $userId) {
-    return $user->id === $userId;
+Broadcast::channel('user.*', function ($user, $toUserId) {
+    return $user->id == $toUserId;
 });
 
-Broadcast::channel('sms_delivery.update_status', function ($user) {
-    return true;
-    /*$record = Delivery::where('message_sid', '=', $messageSid)->first();
-    if ($record) {
-        return $user->id === $record->sender_id;
-    } else {
-        return false;
-    }
-});*/
+Broadcast::channel('sms_delivery.*', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});

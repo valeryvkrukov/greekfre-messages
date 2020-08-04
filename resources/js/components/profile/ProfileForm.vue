@@ -1,6 +1,7 @@
 <template>
     <div class="form-horizontal">
-        <error-modal ref="modal"></error-modal>
+        <error-modal ref="errorModal"></error-modal>
+        <success-modal ref="successModal"></success-modal>
         <div class="form-row">
             <div class="col mx-md-5">
                 <h3>Account settings</h3>
@@ -37,9 +38,28 @@
                     <input type="text" ref="twilio_token" v-model="twilio.twilio_token" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-6 control-label">Message template:</label>
-                    <textarea ref="default_message" v-model="twilio.default_message" class="form-control"></textarea>
-                    <small class="form-text text-muted">
+                    <div class="container">
+                        <div class="row">
+                            <a @click="addMessage" class="btn btn-primary">Add message template</a>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div
+                                v-if="messagesList.length > 0"
+                                v-for="(message, key) of messagesList"
+                                :key="key"
+                                :id="`nav-${key}`"
+                                class="col-12 p-0 pt-2 pb-2 mt-2"
+                            >
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <label>Message #{{ key + 1 }}</label>
+                                    <a @click="removeMessage(key)" class="btn btn-outline-danger btn-sm">X</a>
+                                </div>
+                                <textarea class="form-control" ref="twilio_token" v-model="messagesList[key].content"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <small v-if="messagesList.length > 0" class="form-text text-muted">
                         Message can contain variables $name, $order and $phone that will be replaced by values from "New Message Form"
                     </small>
                 </div>
@@ -50,8 +70,15 @@
 </template>
 
 <script>
+import SuccessModal from '../SuccessModal';
+import ErrorModal from '../ErrorModal';
+
 export default {
     name: 'profile-form',
+    components: {
+        SuccessModal,
+        ErrorModal,
+    },
     data () {
         return {
             currentUrl: location.protocol + '//' + location.host + location.pathname,
@@ -65,8 +92,9 @@ export default {
                 twilio_phone: '',
                 twilio_sid: '',
                 twilio_token: '',
-                twilio_default_message: '',
-            }
+                templates: [],
+            },
+            messagesList: [],
         };
     },
     created () {
@@ -77,10 +105,29 @@ export default {
             let currentObj = this;
             this.axios.get(this.currentUrl + '/load').then((res) => {
                 currentObj.iterateAccountSettings(res.data);
+                currentObj.messagesList = currentObj.twilio.templates;
             })
         },
+        addMessage() {
+            this.messagesList.push({ content: '' });
+            this.twilio.templates = this.messagesList;
+        },
+        removeMessage(index) {
+            this.messagesList.splice(index, 1);
+            this.twilio.templates = this.messagesList;
+        },
         saveSettings(section) {
-            let errorModal = this.$refs.modal;
+            let successModal = this.$refs.successModal;
+            let errorModal = this.$refs.errorModal;
+
+            if (section === 'twilio' && this.twilio.templates.length === 0) {
+                errorModal.title = 'Error';
+                errorModal.error = 'Need at least one message template';
+                $(errorModal.$el).modal();
+
+                return;
+            }
+
             if (this.hasOwnProperty(section)) {
                 let currentObj = this;
                 let data = {
@@ -91,7 +138,11 @@ export default {
                     if (res.error) {
                         //
                     } else {
+                        successModal.title = 'Success';
+                        successModal.message = 'Data saved successfully';
+                        $(successModal.$el).modal();
                         currentObj.iterateAccountSettings(res.data);
+                        currentObj.messagesList = currentObj.twilio.templates;
                     }
                 }).catch((err) => {
                     errorModal.title = 'Network error';

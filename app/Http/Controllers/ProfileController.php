@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +20,6 @@ class ProfileController extends Controller
             'twilio_phone' => 'nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'twilio_sid' => 'nullable|string|alpha_num',
             'twilio_token' => 'nullable|string|alpha_num',
-            'default_message' => 'nullable|string',
         ],
     ];
     /**
@@ -59,6 +59,8 @@ class ProfileController extends Controller
     {
         $account = auth()->user();
         $columns = Schema::getColumnListing($account->getTable());
+        $columns[] = 'templates';
+        $templates = [];
         $section = $request->input('_section');
         $data = $request->input('data');
 
@@ -76,11 +78,26 @@ class ProfileController extends Controller
                     if (!is_null($value) && in_array($key, $columns)) {
                         if ($key === 'password') {
                             $value = Hash::make($value);
+                        } elseif ($key === 'templates') {
+                            $templates = [];
+                            foreach ($value as $template) {
+                                $item = new Template([
+                                    'content' => $template['content'],
+                                ]);
+                                $item->save();
+                                $templates[] = $item;
+                            }
+                        } else {
+                            $account->$key = $value;
                         }
-                        $account->$key = $value;
                     }
                 }
+                $account->templates()->delete();
                 $account->save();
+                if (sizeof($templates) > 0) {
+                    $account->templates()->saveMany($templates);
+                    $account->save();
+                }
             }
         }
 
@@ -103,7 +120,7 @@ class ProfileController extends Controller
                 'twilio_phone' => $user->twilio_phone,
                 'twilio_sid' => $user->twilio_sid,
                 'twilio_token' => $user->twilio_token,
-                'default_message' => $user->default_message,
+                'templates' => $user->templates,
             ],
         ];
     }

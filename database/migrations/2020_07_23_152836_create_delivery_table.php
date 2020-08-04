@@ -16,9 +16,9 @@ class CreateDeliveryTable extends Migration
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
             $table->integer('sender_id');
-            $table->string('message_sid');
-            $table->string('account_sid');
-            $table->string('status');
+            $table->string('message_sid', 128);
+            $table->string('account_sid', 128);
+            $table->string('status', 128);
             $table->integer('messages_id')
                 ->nullable()
                 ->unsigned()
